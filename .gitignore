@@ -1,0 +1,68 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+firebase-debug.log
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch.json and settings.json helpers for Visual Studio Code.
+# Users of VS Code may wish to check those into source control to share with other
+# developers, but may also have local settings that should not be checked in.
+.vscode/
+
+# Flutter/Dart/Pub related
+**/build/
+**/ios/Flutter/.last_build_id
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/framework_info.json
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/Flutter/setup_flutter_swift.sh
+**/ios/.generated/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+/build/
+
+# Symbolication related
+app.*.symbols
+
+# Executable python binary
+__pycache__/
+
+# Android related
+**/android/local.properties
+**/android/key.properties
+**/android/bundle
+**/android/app/src/main/res/raw/google_services.json
+
+# iOS related
+**/ios/Runner/GeneratedPluginRegistrant.h
+**/ios/Runner/GeneratedPluginRegistrant.m
+**/ios/Runner/Podfile.lock
+
+# Web related
+lib/generated_plugin_registrant.dart
+
+# CI/CD related
+.fvm/
+.metadata
+
+# Exceptions
+!/pubspec.lock

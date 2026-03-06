@@ -1,0 +1,178 @@
+import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
+
+/// A settings/notification toggle row for Liquid Gold.
+class ToggleRow extends StatelessWidget {
+  final String icon;
+  final String label;
+  final String? subtitle;
+  final bool value;
+  final ValueChanged<bool>? onChanged;
+  final bool disabled;
+  final bool showDivider;
+
+  const ToggleRow({
+    super.key,
+    required this.icon,
+    required this.label,
+    this.subtitle,
+    required this.value,
+    this.onChanged,
+    this.disabled = false,
+    this.showDivider = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Opacity(
+      opacity: disabled ? 0.4 : 1.0,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            child: Row(
+              children: [
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: AppColors.gold.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                        color: AppColors.gold.withValues(alpha: 0.12)),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(icon, style: const TextStyle(fontSize: 20)),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(label,
+                          style: AppTextStyles.bodyLarge
+                              .copyWith(fontWeight: FontWeight.w600)),
+                      if (subtitle != null) const SizedBox(height: 2),
+                      if (subtitle != null)
+                        Text(subtitle!,
+                            style: AppTextStyles.bodySmall.copyWith(
+                                fontSize: 12, color: AppColors.textSecondary)),
+                    ],
+                  ),
+                ),
+                GestureDetector(
+                  onTap: disabled || onChanged == null
+                      ? null
+                      : () => onChanged!(!value),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 250),
+                    width: 52,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      color: value ? AppColors.gold : AppColors.card,
+                      borderRadius: BorderRadius.circular(15),
+                      border: Border.all(
+                        color: value
+                            ? AppColors.gold
+                            : AppColors.gold.withValues(alpha: 0.2),
+                      ),
+                    ),
+                    child: AnimatedAlign(
+                      duration: const Duration(milliseconds: 250),
+                      alignment:
+                          value ? Alignment.centerRight : Alignment.centerLeft,
+                      child: Container(
+                        margin: const EdgeInsets.all(3),
+                        width: 22,
+                        height: 22,
+                        decoration: BoxDecoration(
+                          color: value ? Colors.black : AppColors.textSecondary,
+                          borderRadius: BorderRadius.circular(11),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (showDivider)
+            Divider(height: 0, color: AppColors.gold.withValues(alpha: 0.05)),
+        ],
+      ),
+    );
+  }
+}
+
+/// A profile/settings menu row with icon, labels, and chevron for Liquid Gold.
+class ProfileMenuRow extends StatelessWidget {
+  final String icon;
+  final String label;
+  final String? subtitle;
+  final VoidCallback? onTap;
+  final Widget? trailing;
+  final bool showDivider;
+
+  const ProfileMenuRow({
+    super.key,
+    required this.icon,
+    required this.label,
+    this.subtitle,
+    this.onTap,
+    this.trailing,
+    this.showDivider = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 4),
+            child: Row(
+              children: [
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: AppColors.gold.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                        color: AppColors.gold.withValues(alpha: 0.12)),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(icon, style: const TextStyle(fontSize: 20)),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(label,
+                          style: AppTextStyles.bodyLarge
+                              .copyWith(fontWeight: FontWeight.w600)),
+                      if (subtitle != null) const SizedBox(height: 2),
+                      if (subtitle != null)
+                        Text(subtitle!,
+                            style: AppTextStyles.bodySmall.copyWith(
+                                fontSize: 12, color: AppColors.textSecondary)),
+                    ],
+                  ),
+                ),
+                trailing ??
+                    const Icon(Icons.chevron_right_rounded,
+                        color: AppColors.textTertiary, size: 20),
+              ],
+            ),
+          ),
+          if (showDivider)
+            Divider(height: 0, color: AppColors.gold.withValues(alpha: 0.05)),
+        ],
+      ),
+    );
+  }
+}
