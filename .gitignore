@@ -58,7 +58,6 @@ __pycache__/
 **/ios/Runner/Podfile.lock
 
 # Web related
-lib/generated_plugin_registrant.dart
 
 # CI/CD related
 .fvm/
