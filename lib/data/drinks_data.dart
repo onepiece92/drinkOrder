@@ -129,17 +129,23 @@ abstract final class DrinksData {
       id: '#LG-8241',
       date: 'Today, 6:45 PM',
       items: [
-        OrderItem(name: 'Hendrick\'s Gin', image: '🍸', qty: 1),
-        OrderItem(name: 'Macallan 18Y', image: '🥃', qty: 1),
+        OrderItem(name: 'Hendrick\'s Gin', image: '🍸', qty: 1, rate: 45.00),
+        OrderItem(name: 'Macallan 18Y', image: '🥃', qty: 1, rate: 350.00),
       ],
-      total: 395.00,
+      subtotal: 395.00,
+      discount: 0.00,
+      grandTotal: 395.00,
       status: 'Out for Delivery',
     ),
     Order(
       id: '#LG-8210',
       date: 'Yesterday, 2:15 PM',
-      items: [OrderItem(name: 'Grey Goose Vodka', image: '🧊', qty: 2)],
-      total: 110.00,
+      items: [
+        OrderItem(name: 'Grey Goose Vodka', image: '🧊', qty: 2, rate: 55.00)
+      ],
+      subtotal: 110.00,
+      discount: 0.00,
+      grandTotal: 110.00,
       status: 'Delivered',
     ),
   ];

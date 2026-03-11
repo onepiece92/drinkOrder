@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../providers/cart_provider.dart';
+import '../providers/orders_provider.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 
@@ -23,25 +24,6 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
   late Animation<double> _fadeAnim;
   int _secondsLeft = 4;
   Timer? _timer;
-
-  late final List<({String desc, IconData icon, String label})> _steps = [
-    (
-      icon: Icons.auto_awesome,
-      label: 'Acquisition Secured',
-      desc: 'Exclusive selection confirmed by boutique'
-    ),
-    (
-      icon: Icons.wine_bar,
-      label: 'Sommelier Appraisal',
-      desc: 'Ensuring vintage and quality standards'
-    ),
-    (
-      icon: Icons.local_shipping,
-      label: 'Private Dispatch',
-      desc:
-          'Bespoke delivery estimated at ${DateFormat('h:mm a').format(DateTime.now().add(const Duration(minutes: 45)))}'
-    ),
-  ];
 
   @override
   void initState() {
@@ -99,172 +81,233 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
 
   @override
   Widget build(BuildContext context) {
+    final orders = context.watch<OrdersProvider>().orders;
+    final latestOrder = orders.isNotEmpty ? orders.first : null;
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           children: [
-            const SizedBox(height: 64),
+            const SizedBox(height: 48),
             // Success icon
             ScaleTransition(
               scale: _scaleAnim,
-              child: Container(
-                width: 130,
-                height: 130,
-                decoration: BoxDecoration(
-                  gradient: AppColors.primaryGradient,
-                  borderRadius: BorderRadius.circular(44),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.gold.withValues(alpha: 0.35),
-                      blurRadius: 40,
-                      offset: const Offset(0, 15),
-                    ),
-                  ],
+              child: Center(
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    gradient: AppColors.primaryGradient,
+                    borderRadius: BorderRadius.circular(36),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.gold.withValues(alpha: 0.3),
+                        blurRadius: 30,
+                        offset: const Offset(0, 10),
+                      ),
+                    ],
+                  ),
+                  alignment: Alignment.center,
+                  child: const Icon(Icons.check_rounded,
+                      color: Colors.black, size: 54),
                 ),
-                alignment: Alignment.center,
-                child: const Icon(Icons.check_rounded,
-                    color: Colors.black, size: 70),
               ),
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 32),
             FadeTransition(
               opacity: _fadeAnim,
               child: Column(
                 children: [
-                  Text('RESERVATION SECURED',
+                  Text('ORDER SUCCESSFUL',
                       style: AppTextStyles.h1
-                          .copyWith(fontSize: 26, letterSpacing: 2)),
-                  const SizedBox(height: 12),
+                          .copyWith(fontSize: 22, letterSpacing: 3)),
+                  const SizedBox(height: 8),
                   Text(
-                    'REFERENCE #LG-${1000 + DateTime.now().minute} • Processed with Discretion',
+                    'Your exquisite selection is being prepared',
                     style: AppTextStyles.bodySmall.copyWith(
-                        color: AppColors.gold.withValues(alpha: 0.6),
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold),
+                      color: AppColors.gold.withValues(alpha: 0.7),
+                      fontSize: 12,
+                    ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 56),
-            // Progress
-            FadeTransition(
-              opacity: _fadeAnim,
-              child: Container(
-                padding: const EdgeInsets.all(28),
-                decoration: BoxDecoration(
-                  color: AppColors.card,
-                  borderRadius: BorderRadius.circular(28),
-                  border:
-                      Border.all(color: AppColors.gold.withValues(alpha: 0.1)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.2),
-                      blurRadius: 25,
-                      offset: const Offset(0, 5),
+            const SizedBox(height: 40),
+
+            // Receipt Section
+            if (latestOrder != null)
+              FadeTransition(
+                opacity: _fadeAnim,
+                child: Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(4),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.4),
+                        blurRadius: 20,
+                        offset: const Offset(0, 10),
+                      ),
+                    ],
+                  ),
+                  child: DefaultTextStyle(
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontFamily: 'Courier', // Receipt font feel
+                      fontSize: 12,
                     ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('VAULT PROGRESS',
-                            style: AppTextStyles.h3.copyWith(fontSize: 16)),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: AppColors.gold.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(12),
+                        const Center(
+                          child: Text(
+                            'Business Name: Liquid Gold',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 14),
                           ),
-                          child: Text('Step 1 of 3',
-                              style: AppTextStyles.labelSmall.copyWith(
-                                  color: AppColors.gold,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 10)),
+                        ),
+                        const SizedBox(height: 12),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('Boutique branch'),
+                            Text(
+                                'Paid Bill No.: ${latestOrder.id.replaceAll('#LG-', '')}'),
+                          ],
+                        ),
+                        const Divider(color: Colors.black38, height: 24),
+                        const Text('Items Ordered',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 12),
+                        const Row(
+                          children: [
+                            Expanded(
+                                flex: 3,
+                                child: Text('Name',
+                                    style: TextStyle(
+                                        decoration: TextDecoration.underline))),
+                            Expanded(
+                                flex: 1,
+                                child: Center(
+                                    child: Text('Qty',
+                                        style: TextStyle(
+                                            decoration:
+                                                TextDecoration.underline)))),
+                            Expanded(
+                                flex: 2,
+                                child: Center(
+                                    child: Text('Rate',
+                                        style: TextStyle(
+                                            decoration:
+                                                TextDecoration.underline)))),
+                            Expanded(
+                                flex: 2,
+                                child: Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text('Amt',
+                                        style: TextStyle(
+                                            decoration:
+                                                TextDecoration.underline)))),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        ...latestOrder.items.map((item) => Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 4),
+                              child: Row(
+                                children: [
+                                  Expanded(flex: 3, child: Text(item.name)),
+                                  Expanded(
+                                      flex: 1,
+                                      child:
+                                          Center(child: Text('x ${item.qty}'))),
+                                  Expanded(
+                                      flex: 2,
+                                      child: Center(
+                                          child: Text(
+                                              item.rate.toStringAsFixed(2)))),
+                                  Expanded(
+                                      flex: 2,
+                                      child: Align(
+                                          alignment: Alignment.centerRight,
+                                          child: Text(
+                                              item.amount.toStringAsFixed(2)))),
+                                ],
+                              ),
+                            )),
+                        const Divider(color: Colors.black38, height: 24),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('Total'),
+                            Text(latestOrder.subtotal.toStringAsFixed(2)),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('Discount'),
+                            Text(latestOrder.discount.toStringAsFixed(2)),
+                          ],
+                        ),
+                        const Divider(color: Colors.black38, height: 24),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('Grand Total',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            Text(latestOrder.grandTotal.toStringAsFixed(2),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                        const Divider(color: Colors.black38, height: 24),
+                        const Text('Cashier',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(latestOrder.cashier),
+                            Text('Payment Mode: ${latestOrder.paymentMode}'),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Counter: ${latestOrder.counter}'),
+                            Text(
+                                'Date: ${latestOrder.date == 'Just now' ? DateFormat('MM/dd/yyyy h:mm:ss a').format(DateTime.now()) : latestOrder.date}'),
+                          ],
+                        ),
+                        const Divider(color: Colors.black38, height: 24),
+                        const Text('Buzz Points',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('Current'),
+                            Text('${latestOrder.buzzPoints}'),
+                          ],
+                        ),
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Total'),
+                            Text('0.00'),
+                          ],
                         ),
                       ],
                     ),
-                    const SizedBox(height: 32),
-                    ..._steps.asMap().entries.map((e) {
-                      final i = e.key;
-                      final s = e.value;
-                      final isActive = i == 0;
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 24),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 48,
-                              height: 48,
-                              decoration: BoxDecoration(
-                                color: isActive
-                                    ? AppColors.gold.withValues(alpha: 0.1)
-                                    : AppColors.background
-                                        .withValues(alpha: 0.5),
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                  color: isActive
-                                      ? AppColors.gold.withValues(alpha: 0.3)
-                                      : AppColors.gold.withValues(alpha: 0.05),
-                                ),
-                              ),
-                              alignment: Alignment.center,
-                              child: Icon(s.icon,
-                                  size: 22,
-                                  color: isActive
-                                      ? AppColors.gold
-                                      : AppColors.gold.withValues(alpha: 0.5)),
-                            ),
-                            const SizedBox(width: 18),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(s.label,
-                                      style: AppTextStyles.bodyLarge.copyWith(
-                                        color: isActive
-                                            ? AppColors.text
-                                            : AppColors.textTertiary,
-                                        fontWeight: isActive
-                                            ? FontWeight.bold
-                                            : FontWeight.normal,
-                                        fontSize: 15,
-                                      )),
-                                  const SizedBox(height: 2),
-                                  Text(s.desc,
-                                      style: AppTextStyles.bodySmall.copyWith(
-                                        color: AppColors.textSecondary,
-                                        fontSize: 12,
-                                      )),
-                                ],
-                              ),
-                            ),
-                            if (isActive)
-                              Container(
-                                width: 8,
-                                height: 8,
-                                decoration: const BoxDecoration(
-                                  color: AppColors.gold,
-                                  shape: BoxShape.circle,
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: AppColors.gold, blurRadius: 8)
-                                  ],
-                                ),
-                              ),
-                          ],
-                        ),
-                      );
-                    }),
-                  ],
+                  ),
                 ),
               ),
-            ),
+
             const SizedBox(height: 40),
             // Auto-redirect countdown ring
             AnimatedBuilder(
@@ -276,11 +319,11 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
                       alignment: Alignment.center,
                       children: [
                         SizedBox(
-                          width: 72,
-                          height: 72,
+                          width: 60,
+                          height: 60,
                           child: CircularProgressIndicator(
                             value: 1.0 - _countdownCtrl.value,
-                            strokeWidth: 3,
+                            strokeWidth: 2,
                             backgroundColor: AppColors.border,
                             valueColor: const AlwaysStoppedAnimation<Color>(
                                 AppColors.gold),
@@ -290,17 +333,18 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
                           '$_secondsLeft',
                           style: AppTextStyles.h2.copyWith(
                             color: AppColors.gold,
+                            fontSize: 18,
                             fontWeight: FontWeight.w900,
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 14),
+                    const SizedBox(height: 12),
                     Text(
                       'Returning to boutique...',
                       style: AppTextStyles.bodySmall.copyWith(
                         color: AppColors.textSecondary,
-                        letterSpacing: 0.5,
+                        fontSize: 11,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -311,6 +355,7 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
                         style: AppTextStyles.labelSmall.copyWith(
                           color: AppColors.gold,
                           fontWeight: FontWeight.w800,
+                          fontSize: 10,
                           letterSpacing: 2,
                           decoration: TextDecoration.underline,
                           decorationColor: AppColors.gold,
@@ -321,7 +366,7 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
                 );
               },
             ),
-            const SizedBox(height: 36),
+            const SizedBox(height: 48),
           ],
         ),
       ),

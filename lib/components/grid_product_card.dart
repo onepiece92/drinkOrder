@@ -52,7 +52,7 @@ class GridProductCard extends StatelessWidget {
             Stack(
               children: [
                 Container(
-                  height: 130,
+                  height: 120,
                   width: double.infinity,
                   color: AppColors.background,
                   alignment: Alignment.center,

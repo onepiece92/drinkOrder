@@ -62,7 +62,7 @@ class _RecentOrdersScreenState extends State<RecentOrdersScreen>
   @override
   Widget build(BuildContext context) {
     final orders = context.watch<OrdersProvider>().orders;
-    final totalSpent = orders.fold<double>(0, (sum, o) => sum + o.total);
+    final totalSpent = orders.fold<double>(0, (sum, o) => sum + o.grandTotal);
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,

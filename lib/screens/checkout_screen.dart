@@ -137,6 +137,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                       name: item.product.name,
                                       image: item.product.image,
                                       qty: item.quantity,
+                                      rate: item.product.price,
                                     ))
                                 .toList();
 
@@ -144,8 +145,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               id: '#LG-${DateFormat('SSSmm').format(DateTime.now())}',
                               date: 'Just now',
                               items: orderItems,
-                              total: cart.total,
+                              subtotal: cart.total,
+                              discount: 0.0,
+                              grandTotal: cart.total,
                               status: 'Processing',
+                              paymentMode:
+                                  _paymentMethods[_selectedPayment].label,
                             );
 
                             context.read<OrdersProvider>().addOrder(newOrder);
